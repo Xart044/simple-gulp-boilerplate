@@ -1,0 +1,17 @@
+{
+  "name": "metka-visit-card",
+  "description": "simple visit-card for metka lab",
+  "main": "index.js",
+  "authors": [
+    "Artem Vergun"
+  ],
+  "license": "ISC",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
