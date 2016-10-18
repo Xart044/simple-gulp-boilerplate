@@ -73,6 +73,6 @@ gulp.task('watch',['devserver','sass','transpiler'],()=>{
 	gulp.watch('app/index.html',Browsersync.reload);
 });
 
-gulp.task('product',['js','css','html','libJS','libCSS']);
+gulp.task('product',['js','css','libJS','libCSS']);
 
 gulp.task('default',['watch']);
