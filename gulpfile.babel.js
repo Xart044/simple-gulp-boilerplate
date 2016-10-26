@@ -6,6 +6,7 @@ import concat from 'gulp-concat';
 import rename from 'gulp-rename';
 import minCSS from 'gulp-clean-css';
 import minJS from 'gulp-uglifyjs';
+import htmlmin from 'gulp-htmlmin';
 import babel from 'gulp-babel';
 import Browsersync from 'browser-sync';
 import browserify from 'browserify';
@@ -41,10 +42,42 @@ gulp.task('devserver',()=>{
 	});
 });
 
-gulp.task('watch',['devserver','sass','js'],()=>{
+gulp.task('CSS__prefix__minify',()=>{
+	gulp.src('app/css/main.css')
+	.pipe(autoprefixer({
+		browser:'last 15 versions'
+	}))
+	.pipe(minCSS())
+	.pipe(rename({
+		suffix: '.min'
+	}))
+	.pipe(gulp.dest('dist/css'));	
+});
+
+gulp.task('html__minify',()=>{
+	gulp.src('app/*.html')
+	.pipe(htmlmin({collapseWhitespace: true}))
+	.pipe(gulp.dest('dist/html'));
+});
+
+gulp.task('JS__babel__minify',()=>{
+	gulp.src('app/scripts/*.js')
+	.pipe(babel({
+		presets:['es2015']
+	}))
+	.pipe(minJS())
+	.pipe(rename({
+		suffix: '.min'
+	}))
+	.pipe(gulp.dest('dist/js'));
+});
+
+gulp.task('dev',['devserver','sass','js'],()=>{
 	gulp.watch('app/sass/**/*.sass',['sass',Browsersync.reload]);
 	gulp.watch('app/js/**/*.js',['js',Browsersync.reload]);
 	gulp.watch('app/index.html',Browsersync.reload);
 });
 
-gulp.task('default',['watch']);
+gulp.task('production',['JS__babel__minify','CSS__prefix__minify','html__minify']);
+
+gulp.task('default',['dev']);
