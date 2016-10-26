@@ -8,6 +8,10 @@ import minCSS from 'gulp-clean-css';
 import minJS from 'gulp-uglifyjs';
 import babel from 'gulp-babel';
 import Browsersync from 'browser-sync';
+import browserify from 'browserify';
+import gutil from 'gulp-util';
+import babelify from 'babelify';
+import source from 'vinyl-source-stream';
 
 gulp.task('sass',()=>{
 	gulp.src('app/sass/main.sass')
@@ -15,12 +19,17 @@ gulp.task('sass',()=>{
 	.pipe(gulp.dest('app/css'));
 });
 
-gulp.task('transpiler',()=>{
-	gulp.src('app/js/index.js')
-	.pipe(babel({
-		presets:['es2015']
+gulp.task('js',()=>{
+	return browserify('app/js/index.js')
+	.transform(babelify.configure({
+  		presets: ["es2015"]
 	}))
-	.pipe(gulp.dest('app/scripts'));
+	.bundle()
+	.on('error',(e)=>{
+		gutil.log(e);
+	})
+	.pipe(source('index.js'))
+	.pipe(gulp.dest('app/scripts/'))
 });
 
 gulp.task('devserver',()=>{
@@ -32,47 +41,10 @@ gulp.task('devserver',()=>{
 	});
 });
 
-gulp.task('libJS',()=>{
-	gulp.src([
-// libs JS in app folder
-	])
-	.pipe(gulp.dest('dist/scripts/libs'));
-});
-
-gulp.task('libCSS',()=>{
-	gulp.src([
-// libs CSS in app folder
-	])
-	.pipe(gulp.dest('dist/css/libs'));
-})
-
-gulp.task('css',()=>{
-	gulp.src('app/css/main.css')
-	.pipe(autoprefixer({
-		browser:'last 15 versions'
-	}))
-	.pipe(minCSS())
-	.pipe(rename({
-		suffix: '.min'
-	}))
-	.pipe(gulp.dest('dist/css'));
-});
-
-gulp.task('js',()=>{
-	gulp.src('app/scripts/index.js')
-	.pipe(minJS())
-	.pipe(rename({
-		suffix:'.min'
-	}))
-	.pipe(gulp.dest('dist/scripts'));
-});
-
-gulp.task('watch',['devserver','sass','transpiler'],()=>{
+gulp.task('watch',['devserver','sass','js'],()=>{
 	gulp.watch('app/sass/**/*.sass',['sass',Browsersync.reload]);
-	gulp.watch('app/js/**/*.js',['transpiler',Browsersync.reload]);
+	gulp.watch('app/js/**/*.js',['js',Browsersync.reload]);
 	gulp.watch('app/index.html',Browsersync.reload);
 });
-
-gulp.task('product',['js','css','libJS','libCSS']);
 
 gulp.task('default',['watch']);
