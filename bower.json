@@ -1,6 +1,6 @@
 {
-  "name": "metka-visit-card",
-  "description": "simple visit-card for metka lab",
+  "name": "generator-simple-boilerplate-gulp",
+  "description": "generator-simple-boilerplate-gulp",
   "main": "index.js",
   "authors": [
     "Artem Vergun"
