@@ -35,10 +35,6 @@ git copy https://github.com/Xart044/simple-gulp-boilerplate.git
 ```cli
 gulp dev
 ```
-or just 
-```cli
-gulp
-```
 ###Production stage 
 ```cli
 gulp product

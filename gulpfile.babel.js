@@ -69,7 +69,7 @@ gulp.task('image__minify',()=>{
 });
 
 gulp.task('JS__babel__minify',()=>{
-	gulp.src('app/scripts/*.js')
+	gulp.src('app/scripts/index.js')
 	.pipe(babel({
 		presets:['es2015']
 	}))
@@ -97,5 +97,3 @@ gulp.task('cleanDest',()=>{
 });
 
 gulp.task('product',['cleanDest','JS__babel__minify','CSS__prefix__minify','html__minify','image__minify','move__libs']);
-
-gulp.task('default',['dev']);
