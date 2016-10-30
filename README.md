@@ -28,8 +28,9 @@ import clean from 'gulp-clean';
 ####4.Using Sass preprocessor
 
 ## Installing:  
-git copy https://github.com/Xart044/simple-gulp-boilerplate.git 
-
+```cli
+git clone https://github.com/Xart044/simple-gulp-boilerplate.git 
+```
 ##CLI Usage: 
 ###Developing stage 
 ```cli
