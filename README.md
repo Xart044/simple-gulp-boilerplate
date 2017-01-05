@@ -30,12 +30,17 @@ import clean from 'gulp-clean';
 ## Installing:  
 ```cli
 git clone https://github.com/Xart044/simple-gulp-boilerplate.git 
+npm i
 ```
 ##CLI Usage: 
 ###Developing stage 
 ```cli
 gulp dev
 ```
+###Cleaning dist folder
+```cli
+gulp clean
+``` 
 ###Production stage 
 ```cli
 gulp product

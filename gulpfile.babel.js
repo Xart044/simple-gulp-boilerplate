@@ -2,8 +2,8 @@
 import gulp from 'gulp';
 import sass from 'gulp-sass';
 import autoprefixer from 'gulp-autoprefixer';
-import concat from 'gulp-concat';
 import rename from 'gulp-rename';
+import rigger from 'gulp-rigger';
 import minCSS from 'gulp-clean-css';
 import minJS from 'gulp-uglifyjs';
 import htmlmin from 'gulp-htmlmin';
@@ -14,7 +14,13 @@ import browserify from 'browserify';
 import gutil from 'gulp-util';
 import babelify from 'babelify';
 import source from 'vinyl-source-stream';
-import clean from 'gulp-clean';
+import del from 'del';
+
+gulp.task('views',()=>{
+	gulp.src('app/views/*.html')
+		.pipe(rigger())
+		.pipe(gulp.dest('app'))
+});
 
 gulp.task('sass',()=>{
 	gulp.src('app/sass/main.sass')
@@ -50,9 +56,9 @@ gulp.task('CSS__prefix__minify',()=>{
 		browser:'last 15 versions'
 	}))
 	.pipe(minCSS())
-	.pipe(rename({
-		suffix: '.min'
-	}))
+	// .pipe(rename({
+	// 	suffix: '.min'
+	// }))
 	.pipe(gulp.dest('dist/css'));	
 });
 
@@ -74,9 +80,9 @@ gulp.task('JS__babel__minify',()=>{
 		presets:['es2015']
 	}))
 	.pipe(minJS())
-	.pipe(rename({
-		suffix: '.min'
-	}))
+	// .pipe(rename({
+	// 	suffix: '.min'
+	// }))
 	.pipe(gulp.dest('dist/js'));
 });
 
@@ -85,15 +91,14 @@ gulp.task('move__libs',()=>{
 	.pipe(gulp.dest('dist/libs'));
 });
 
-gulp.task('dev',['devserver','sass','js'],()=>{
+gulp.task('dev',['devserver','views','sass','js'],()=>{
 	gulp.watch('app/sass/**/*.sass',['sass',Browsersync.reload]);
 	gulp.watch('app/js/**/*.js',['js',Browsersync.reload]);
-	gulp.watch('app/index.html',Browsersync.reload);
+	gulp.watch('app/**/*.html',['views',Browsersync.reload]);
 });
 
-gulp.task('cleanDest',()=>{
-	gulp.src('dist')
-	.pipe(clean());
+gulp.task('clean',()=>{
+	del('dist');
 });
 
-gulp.task('product',['cleanDest','JS__babel__minify','CSS__prefix__minify','html__minify','image__minify','move__libs']);
+gulp.task('product',['clean','JS__babel__minify','CSS__prefix__minify','html__minify','image__minify','move__libs']);
